@@ -9,6 +9,8 @@ float xpos, ypos;
 
 PFont gFont;
 
+int page = 1;
+
 int timeout = 3; // to slow the mouse down a little
 int value =0;
 
@@ -29,13 +31,34 @@ void setup() {
   Ellipse1 = new EllipseIcon();
   Start = new Start();
   GameOver = new GameOver();
-  //Button = new Button();
+//  Button = new Button();
   oscP5 = new OscP5(this, myListeningPort);
   frameRate(25);
   gFont = loadFont ("SynchroLET-48.vlw");
 }
 
 void draw() {
+ startPage();
+ 
+ 
+ 
+}
+
+void startPage(){
+  Start.drawStart();
+  
+  if (myNetAddressList.list().size() == 2 ){
+    gameApp();
+    
+  }
+  
+  
+  
+  
+  
+}
+
+void gameApp(){
   background(255);
 
   if (Ellipse1.stopped == false) {
@@ -44,8 +67,9 @@ void draw() {
   Ellipse1.checkBounce();
   Ellipse1.drawEllipse();
 
-  //timeout--;
+  
 }
+
 
 void mouseDragged() {
   if ( mouseX < xpos+200 && mouseX > xpos-200 && mouseY > ypos-200 && mouseY < ypos+200) {

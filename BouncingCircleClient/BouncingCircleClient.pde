@@ -15,7 +15,7 @@ NetAddress myBroadcastLocation;
 
 
 void setup() {
-  size(800, 800);
+  size(800, 600);
   noStroke();
   Ellipse1 = new EllipseIcon();
     /* create a new instance of oscP5. 
