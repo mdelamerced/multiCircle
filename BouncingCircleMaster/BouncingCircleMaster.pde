@@ -30,7 +30,7 @@ void setup() {
   GameOver = new GameOver();
   oscP5 = new OscP5(this, myListeningPort);
   frameRate(25);
-  gFont = loadFont ("Synchro-LET-48.vlw");
+  gFont = loadFont ("SynchroLET-48.vlw");
 }
 
 void draw() {
