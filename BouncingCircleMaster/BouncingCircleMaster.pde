@@ -2,7 +2,11 @@ import oscP5.*;
 import netP5.*;
 
 EllipseIcon Ellipse1;
+Start Start;
+GameOver GameOver;
 float xpos, ypos;
+
+PFont gFont;
 
 int timeout = 3; // to slow the mouse down a little
 int value =0;
@@ -19,11 +23,14 @@ String myDisconnectPattern = "/server/disconnect";
 
 
 void setup() {
-  size(800, 800);
+  size(800, 600);
   noStroke();
   Ellipse1 = new EllipseIcon();
+  Start = new Start();
+  GameOver = new GameOver();
   oscP5 = new OscP5(this, myListeningPort);
   frameRate(25);
+  gFont = loadFont ("Synchro-LET-48.vlw");
 }
 
 void draw() {
@@ -35,7 +42,7 @@ void draw() {
   Ellipse1.checkBounce();
   Ellipse1.drawEllipse();
 
-  timeout--;
+  //timeout--;
 }
 
 void mouseDragged() {
@@ -44,14 +51,17 @@ void mouseDragged() {
   }
   else
     if ( mouseX > xpos+200 || mouseX < xpos-200 || mouseY < ypos-200 || mouseY > ypos+200) {
-      println ("nay");
+      //println ("nay");
+      GameOver.drawOver();
       //  window.location = "http://google.com";
     }
 }
 
 
 void mouseReleased() {
-  println("nope");
+  
+  GameOver.drawOver();
+ // println("nope");
 }
 
 
