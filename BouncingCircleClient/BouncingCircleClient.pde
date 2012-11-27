@@ -4,6 +4,7 @@ import netP5.*;
 EllipseIcon Ellipse1;
 Start Start;
 GameOver GameOver;
+Button button;
 float xpos, ypos;
 
 PFont gFont;
@@ -33,6 +34,7 @@ void setup() {
   Ellipse1 = new EllipseIcon();
   Start = new Start();
   GameOver = new GameOver();
+  button = new Button(250, 337, 10, color(204), color(255), color(0));
   gFont = loadFont ("SynchroLET-48.vlw");
   /* create a new instance of oscP5. 
    * 12000 is the port number you are listening for incoming osc messages.

@@ -4,7 +4,7 @@ import netP5.*;
 EllipseIcon Ellipse1;
 Start Start;
 GameOver GameOver;
-Button Button;
+Button button;
 float xpos, ypos;
 
 PFont gFont;
@@ -32,7 +32,7 @@ void setup() {
   Ellipse1 = new EllipseIcon();
   Start = new Start();
   GameOver = new GameOver();
-  //  Button = new Button();
+  button = new Button(250, 337, 10, color(204), color(255), color(0));
   oscP5 = new OscP5(this, myListeningPort);
   frameRate(25);
   gFont = loadFont ("SynchroLET-48.vlw");

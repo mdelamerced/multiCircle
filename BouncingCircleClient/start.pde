@@ -6,6 +6,7 @@ class Start{
    fill(255);
    textFont(gFont, 48);
    text("Click and Hold It", 200,200);
+   button.display();
    text("Start Game", 275, 300);
    textFont(gFont, 20);
    text("Requires 4 players to start", 275,350);
