@@ -11,7 +11,7 @@ class Start{
    textFont(gFont, 20);
    text("Requires 4 players to start", 275,350);
    text("There are  "+myNetAddressList.list().size()+"  players ready.", 270, 375);
-    
-   
   }
+  
+
 }

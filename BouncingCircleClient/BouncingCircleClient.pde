@@ -56,7 +56,7 @@ void draw() {
 void startPage() {
   Start.drawStart();
 
-  if (myNetAddressList.list().size() == 1 ) {
+  if (myNetAddressList.list().size() == 1 && button.press()) {
     gameApp();
   }
 }

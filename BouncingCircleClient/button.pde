@@ -15,25 +15,33 @@ class Button {
     overGray = o;
     pressGray = p;
   }
-  
+
   // Updates the over field every frame
   void update() {
     if ((mouseX >= x) && (mouseX <= x + size) &&
-        (mouseY >= y) && (mouseY <= y + size)) {
+      (mouseY >= y) && (mouseY <= y + size)) {
       over = true;
-    } else {
+    } 
+    else {
       over = false;
     }
   }
 
   boolean press() {
+//    OscMessage m;
     if (over == true) {
       pressed = true;
       return true;
-    } else {
+
+  /*    m = new OscMessage("/server/connect", new Object[0]);
+      oscP5.flush(m, myBroadcastLocation);*/
+    }
+
+    else {
       return false;
     }
   }
+
 
   void release() {
     pressed = false; // Set to false when the mouse is released
@@ -42,12 +50,15 @@ class Button {
   void display() {
     if (pressed == true) {
       fill(pressGray);
-    } else if (over == true) {
+    } 
+    else if (over == true) {
       fill(overGray);
-    } else {
+    } 
+    else {
       fill(baseGray);
     }
     stroke(255);
     rect(x, y, size, size);
   }
 }
+
