@@ -1,5 +1,6 @@
 import oscP5.*;
 import netP5.*;
+
 //Axis Camera Code Below
 import java.awt.Dimension; 
 import java.awt.Image; 
@@ -19,23 +20,9 @@ import com.sun.image.codec.jpeg.JPEGImageDecoder;
 
 CaptureAxisCamera video;
 
-EllipseIcon Ellipse1;
-Start Start;
-GameOver GameOver;
-Button button;
-float xpos, ypos;
-
-PFont gFont;
-
-int page = 1;
-
-int timeout = 3; // to slow the mouse down a little
-int value = 0;
-
 boolean newFrame=false;
 
 OscP5 oscP5;
-OscMessage m;
 NetAddressList myNetAddressList = new NetAddressList();
 /* listeningPort is the port the server is listening for incoming messages */
 int myListeningPort = 32000;
@@ -49,14 +36,19 @@ String myDisconnectPattern = "/server/disconnect";
 void setup() {
   size(1024, 768);
   noStroke();
-  video = new CaptureAxisCamera(this, "128.122.151.82", 640, 480, false);
-  Ellipse1 = new EllipseIcon();
-  Start = new Start();
-  GameOver = new GameOver();
-  button = new Button(250, 337, 10, color(204), color(255), color(0));
+  video = new CaptureAxisCamera(this, "128.122.151.28", 640, 480, false);
   oscP5 = new OscP5(this, myListeningPort);
   frameRate(25);
-  gFont = loadFont ("SynchroLET-48.vlw");
+}
+
+void draw() {
+  background(0);
+  
+  if (video.available()) {
+    video.read();
+
+    image(video, 0, 0, 640, 480);
+  } 
 }
 
 void captureEvent(CaptureAxisCamera video) {
@@ -64,51 +56,6 @@ void captureEvent(CaptureAxisCamera video) {
   newFrame=true;
 }
 
-
-void draw() {
-  startPage();
-}
-
-void startPage() {
-  Start.drawStart();
-
-  if (myNetAddressList.list().size() == 1 ) {
-    gameApp();
-  }
-}
-
-void gameApp() {
-  background(255);
-
-  if (Ellipse1.stopped == false) {
-    Ellipse1.moveEllipse();
-  }
-  Ellipse1.checkBounce();
-  Ellipse1.drawEllipse();
-}
-
-
-void mouseDragged() {
-  if ( mouseX < xpos+200 && mouseX > xpos-200 && mouseY > ypos-200 && mouseY < ypos+200) {
-    println("yei");
-  }
-  else
-    if ( mouseX > xpos+200 || mouseX < xpos-200 || mouseY < ypos-200 || mouseY > ypos+200) {
-      //println ("nay");
-      GameOver.drawOver();
-      //  window.location = "http://google.com";
-    }
-}
-
-
-void mouseReleased() {
-
-  GameOver.drawOver();
-  // println("nope");
-}
-
-
-//OSC Messages Events
 
 void oscEvent(OscMessage theOscMessage) {
   /* check if the address pattern fits any of our patterns */
@@ -150,8 +97,7 @@ private void disconnect(String theIPaddress) {
     println("### "+theIPaddress+" is not connected.");
   }
   println("### currently there are "+myNetAddressList.list().size());
-} 
-
+}
 
 
 /*

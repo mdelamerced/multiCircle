@@ -1,6 +1,6 @@
 class EllipseIcon {
   //ATTRIBUTES
- 
+
   float xspeed = 1;
   float yspeed = 1;
   float b;
@@ -10,8 +10,8 @@ class EllipseIcon {
 
   //CONSTRUCTOR
   EllipseIcon() {
-    xpos=random(201,599);
-    ypos=random(201,599);
+    xpos=random(201, 599);
+    ypos=random(201, 599);
     b = random(255);
     c = random(100, 200);
   }
@@ -36,5 +36,7 @@ class EllipseIcon {
       yspeed *= -1;
     }
   }
+
+
 }
 

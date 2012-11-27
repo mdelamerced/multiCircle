@@ -5,12 +5,14 @@ EllipseIcon Ellipse1;
 Start Start;
 GameOver GameOver;
 Button button;
+GameApp GameApp;
 float xpos, ypos;
 
 PFont gFont;
 
 int timeout = 3; // to slow the mouse down a little
 int value =0;
+int phase = 1;
 
 OscP5 oscP5;
 OscMessage m;
@@ -26,14 +28,13 @@ int myBroadcastPort = 12000;
 String myConnectPattern = "/server/connect";
 String myDisconnectPattern = "/server/disconnect";
 
-
-
 void setup() {
   size(800, 600);
   noStroke();
   Ellipse1 = new EllipseIcon();
   Start = new Start();
   GameOver = new GameOver();
+  GameApp = new GameApp();
   button = new Button(250, 337, 10, color(204), color(255), color(0));
   gFont = loadFont ("SynchroLET-48.vlw");
   /* create a new instance of oscP5. 
@@ -50,30 +51,28 @@ void setup() {
 }
 
 void draw() {
-  startPage();
+  // startPage();
+  GameApp.gameStart();
+  if (phase > 1){
+    GameOver.drawOver(); 
+  }
+  
+  
 }
 
 void startPage() {
   Start.drawStart();
 
   if (myNetAddressList.list().size() == 1 && button.press()) {
-    gameApp();
+    GameApp.gameStart();
   }
 }
-
-void gameApp() {
-  background(255);
-
-  if (Ellipse1.stopped == false) {
-    Ellipse1.moveEllipse();
-  }
-  Ellipse1.checkBounce();
-  Ellipse1.drawEllipse();
-}
-
 
 
 void mousePressed() {
+  println("nope");
+ // phase++;
+
   /* create a new OscMessage with an address pattern, in this case /test. */
   OscMessage myOscMessage = new OscMessage("/test");
   /* add a value (an integer) to the OscMessage */
@@ -90,9 +89,10 @@ void mouseDragged() {
   else
     if ( mouseX > xpos+200 || mouseX < xpos-200 || mouseY < ypos-200 || mouseY > ypos+200) {
       println ("nay");
+      phase++;
       m = new OscMessage("/server/disconnect", new Object[0]);
       oscP5.flush(m, myBroadcastLocation);  
-      GameOver.drawOver(); 
+     
       //   break;
       //  window.location = "http://google.com";
     }
@@ -106,6 +106,12 @@ void mouseReleased() {
   GameOver.drawOver(); 
   //break;
 }
+
+
+
+
+
+
 
 void keyPressed() {
   OscMessage m;
