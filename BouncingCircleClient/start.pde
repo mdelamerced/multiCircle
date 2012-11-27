@@ -9,7 +9,7 @@ class Start{
    text("Start Game", 275, 300);
    textFont(gFont, 20);
    text("Requires 4 players to start", 275,350);
-   text("There are  "+myNetAddressList.list().size()+"  players ready.", 280, 375);
+   text("There are  "+myNetAddressList.list().size()+"  players ready.", 270, 375);
     
    
   }

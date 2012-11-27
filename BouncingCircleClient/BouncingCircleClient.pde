@@ -2,15 +2,28 @@ import oscP5.*;
 import netP5.*;
 
 EllipseIcon Ellipse1;
+Start Start;
+GameOver GameOver;
 float xpos, ypos;
+
+PFont gFont;
 
 int timeout = 3; // to slow the mouse down a little
 int value =0;
 
 OscP5 oscP5;
+OscMessage m;
 
 /* a NetAddress contains the ip address and port number of a remote location in the network. */
 NetAddress myBroadcastLocation; 
+NetAddressList myNetAddressList = new NetAddressList();
+/* listeningPort is the port the server is listening for incoming messages */
+int myListeningPort = 32000;
+/* the broadcast port is the port the clients should listen for incoming messages from the server*/
+int myBroadcastPort = 12000;
+
+String myConnectPattern = "/server/connect";
+String myDisconnectPattern = "/server/disconnect";
 
 
 
@@ -18,20 +31,35 @@ void setup() {
   size(800, 600);
   noStroke();
   Ellipse1 = new EllipseIcon();
-    /* create a new instance of oscP5. 
+  Start = new Start();
+  GameOver = new GameOver();
+  gFont = loadFont ("SynchroLET-48.vlw");
+  /* create a new instance of oscP5. 
    * 12000 is the port number you are listening for incoming osc messages.
    */
-  oscP5 = new OscP5(this,12000);
-  
+  oscP5 = new OscP5(this, 12000);
+
   /* create a new NetAddress. a NetAddress is used when sending osc messages
    * with the oscP5.send method.
    */
-  
+
   /* the address of the osc broadcast server */
-  myBroadcastLocation = new NetAddress("127.0.0.1",32000); //local instance, use real IP address for other computers
+  myBroadcastLocation = new NetAddress("127.0.0.1", 32000); //local instance, use real IP address for other computers
 }
 
 void draw() {
+  startPage();
+}
+
+void startPage() {
+  Start.drawStart();
+
+  if (myNetAddressList.list().size() == 1 ) {
+    gameApp();
+  }
+}
+
+void gameApp() {
   background(255);
 
   if (Ellipse1.stopped == false) {
@@ -39,9 +67,9 @@ void draw() {
   }
   Ellipse1.checkBounce();
   Ellipse1.drawEllipse();
-
-//  timeout--;
 }
+
+
 
 void mousePressed() {
   /* create a new OscMessage with an address pattern, in this case /test. */
@@ -60,6 +88,10 @@ void mouseDragged() {
   else
     if ( mouseX > xpos+200 || mouseX < xpos-200 || mouseY < ypos-200 || mouseY > ypos+200) {
       println ("nay");
+      m = new OscMessage("/server/disconnect", new Object[0]);
+      oscP5.flush(m, myBroadcastLocation);  
+      GameOver.drawOver(); 
+      //   break;
       //  window.location = "http://google.com";
     }
 }
@@ -67,27 +99,31 @@ void mouseDragged() {
 
 void mouseReleased() {
   println("nope");
+  m = new OscMessage("/server/disconnect", new Object[0]);
+  oscP5.flush(m, myBroadcastLocation); 
+  GameOver.drawOver(); 
+  //break;
 }
 
 void keyPressed() {
   OscMessage m;
   switch(key) {
     case('c'):
-      /* connect to the broadcaster */
-      m = new OscMessage("/server/connect",new Object[0]);
-      oscP5.flush(m,myBroadcastLocation);  
-      break;
+    /* connect to the broadcaster */
+    m = new OscMessage("/server/connect", new Object[0]);
+    oscP5.flush(m, myBroadcastLocation);  
+    break;
     case('d'):
-      /* disconnect from the broadcaster */
-      m = new OscMessage("/server/disconnect",new Object[0]);
-      oscP5.flush(m,myBroadcastLocation);  
-      break;
-
-  }  
+    /* disconnect from the broadcaster */
+    m = new OscMessage("/server/disconnect", new Object[0]);
+    oscP5.flush(m, myBroadcastLocation);  
+    break;
+  }
 }
 
 void oscEvent(OscMessage theOscMessage) {
- /* get and print the address pattern and the typetag of the received OscMessage */
+  /* get and print the address pattern and the typetag of the received OscMessage */
   println("### received an osc message with addrpattern "+theOscMessage.addrPattern()+" and typetag "+theOscMessage.typetag());
   theOscMessage.print();
 }
+

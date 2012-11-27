@@ -12,9 +12,10 @@ PFont gFont;
 int page = 1;
 
 int timeout = 3; // to slow the mouse down a little
-int value =0;
+int value = 0;
 
 OscP5 oscP5;
+OscMessage m;
 NetAddressList myNetAddressList = new NetAddressList();
 /* listeningPort is the port the server is listening for incoming messages */
 int myListeningPort = 32000;
@@ -31,34 +32,25 @@ void setup() {
   Ellipse1 = new EllipseIcon();
   Start = new Start();
   GameOver = new GameOver();
-//  Button = new Button();
+  //  Button = new Button();
   oscP5 = new OscP5(this, myListeningPort);
   frameRate(25);
   gFont = loadFont ("SynchroLET-48.vlw");
 }
 
 void draw() {
- startPage();
- 
- 
- 
+  startPage();
 }
 
-void startPage(){
+void startPage() {
   Start.drawStart();
-  
-  if (myNetAddressList.list().size() == 2 ){
+
+  if (myNetAddressList.list().size() == 1 ) {
     gameApp();
-    
   }
-  
-  
-  
-  
-  
 }
 
-void gameApp(){
+void gameApp() {
   background(255);
 
   if (Ellipse1.stopped == false) {
@@ -66,8 +58,6 @@ void gameApp(){
   }
   Ellipse1.checkBounce();
   Ellipse1.drawEllipse();
-
-  
 }
 
 
@@ -85,11 +75,13 @@ void mouseDragged() {
 
 
 void mouseReleased() {
-  
+
   GameOver.drawOver();
- // println("nope");
+  // println("nope");
 }
 
+
+//OSC Messages Events
 
 void oscEvent(OscMessage theOscMessage) {
   /* check if the address pattern fits any of our patterns */
