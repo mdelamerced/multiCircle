@@ -1,11 +1,11 @@
 class GameOver {
   
-  
  void drawOver(){
-   background(0);
+   background(overImage);
    fill(255);
    textFont(gFont, 48);
-   text("GAME OVER", 300,300);
+   text("YOU LOST!",400,550);
+   button.display();
    
  }
 }

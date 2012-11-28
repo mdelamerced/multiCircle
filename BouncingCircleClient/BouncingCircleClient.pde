@@ -1,6 +1,9 @@
 import oscP5.*;
 import netP5.*;
 
+PImage startImage;
+PImage overImage;
+
 EllipseIcon Ellipse1;
 Start Start;
 GameOver GameOver;
@@ -29,13 +32,15 @@ String myConnectPattern = "/server/connect";
 String myDisconnectPattern = "/server/disconnect";
 
 void setup() {
-  size(800, 600);
+  size(1024, 768);
   noStroke();
+  startImage = loadImage("startgame.png");
+  overImage = loadImage("gameover.png");
   Ellipse1 = new EllipseIcon();
   Start = new Start();
   GameOver = new GameOver();
   GameApp = new GameApp();
-  button = new Button(250, 337, 10, color(204), color(255), color(0));
+  button = new Button(width/2, 500, 50, color(0), color(0), color(0));
   gFont = loadFont ("SynchroLET-48.vlw");
   /* create a new instance of oscP5. 
    * 12000 is the port number you are listening for incoming osc messages.
@@ -52,12 +57,16 @@ void setup() {
 
 void draw() {
   // startPage();
-  GameApp.gameStart();
-  if (phase > 1){
-    GameOver.drawOver(); 
+
+  if (phase == 1) {
+    Start.drawStart();
   }
-  
-  
+  else if (phase == 2) {
+    GameApp.gameStart();
+  }
+  else if (phase > 2) {
+    GameOver.drawOver();
+  }
 }
 
 void startPage() {
@@ -71,7 +80,7 @@ void startPage() {
 
 void mousePressed() {
   println("nope");
- // phase++;
+  // phase++;
 
   /* create a new OscMessage with an address pattern, in this case /test. */
   OscMessage myOscMessage = new OscMessage("/test");
@@ -91,26 +100,18 @@ void mouseDragged() {
       println ("nay");
       phase++;
       m = new OscMessage("/server/disconnect", new Object[0]);
-      oscP5.flush(m, myBroadcastLocation);  
-     
-      //   break;
-      //  window.location = "http://google.com";
+      oscP5.flush(m, myBroadcastLocation);
     }
 }
 
 
 void mouseReleased() {
   println("nope");
+  phase++;
   m = new OscMessage("/server/disconnect", new Object[0]);
   oscP5.flush(m, myBroadcastLocation); 
-  GameOver.drawOver(); 
-  //break;
+  GameOver.drawOver();
 }
-
-
-
-
-
 
 
 void keyPressed() {

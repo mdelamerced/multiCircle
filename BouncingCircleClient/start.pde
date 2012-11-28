@@ -1,16 +1,18 @@
 class Start{
   
+  
+  
   void drawStart(){
-   fill(0);
-   rect (0,0, width, height);
-   fill(255);
+   background(startImage);
+  
    textFont(gFont, 48);
-   text("Click and Hold It", 200,200);
+ //  text("Click and Hold It", 200,200);
    button.display();
-   text("Start Game", 275, 300);
-   textFont(gFont, 20);
-   text("Requires 4 players to start", 275,350);
-   text("There are  "+myNetAddressList.list().size()+"  players ready.", 270, 375);
+    fill(0);  
+//   text("Start Game", 275, 300);
+//   textFont(gFont, 20);
+   text("Requires 4 players to start", 215,550);
+   text("There are  "+myNetAddressList.list().size()+"  players ready.", 215, 600);
   }
   
 

@@ -19,6 +19,9 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;
 
 CaptureAxisCamera video;
+/*CaptureAxisCamera2 video2;
+CaptureAxisCamera3 video3;
+CaptureAxisCamera4 video4;*/
 
 boolean newFrame=false;
 
@@ -37,6 +40,10 @@ void setup() {
   size(1024, 768);
   noStroke();
   video = new CaptureAxisCamera(this, "128.122.151.28", 640, 480, false);
+  /*video2 = new CaptureAxisCamera2(this, "128.122.151.28", 640, 480, false);
+  video3 = new CaptureAxisCamera3(this, "128.122.151.28", 640, 480, false);
+  video4 = new CaptureAxisCamera4(this, "128.122.151.28", 640, 480, false);*/
+  
   oscP5 = new OscP5(this, myListeningPort);
   frameRate(25);
 }
