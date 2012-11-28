@@ -1,7 +1,9 @@
 import oscP5.*;
 import netP5.*;
 
-//Axis Camera Code Below
+PFont appFont;
+
+//Axis Camera Code 
 import java.awt.Dimension; 
 import java.awt.Image; 
 import java.awt.image.BufferedImage; 
@@ -20,12 +22,13 @@ import com.sun.image.codec.jpeg.JPEGImageDecoder;
 
 CaptureAxisCamera video;
 /*CaptureAxisCamera2 video2;
-CaptureAxisCamera3 video3;
-CaptureAxisCamera4 video4;*/
+ CaptureAxisCamera3 video3;
+ CaptureAxisCamera4 video4;*/
 
 boolean newFrame=false;
 
 OscP5 oscP5;
+
 NetAddressList myNetAddressList = new NetAddressList();
 /* listeningPort is the port the server is listening for incoming messages */
 int myListeningPort = 32000;
@@ -40,31 +43,53 @@ void setup() {
   background(0);
   size(1024, 768);
   noStroke();
-  video = new CaptureAxisCamera(this, "128.122.151.28", 320, 240, false);
+  video = new CaptureAxisCamera(this, "128.122.151.28", 640, 480, false);
   /*video2 = new CaptureAxisCamera2(this, "128.122.151.28", 640, 480, false);
-  video3 = new CaptureAxisCamera3(this, "128.122.151.28", 640, 480, false);
-  video4 = new CaptureAxisCamera4(this, "128.122.151.28", 640, 480, false);*/
-  
+   video3 = new CaptureAxisCamera3(this, "128.122.151.28", 640, 480, false);
+   video4 = new CaptureAxisCamera4(this, "128.122.151.28", 640, 480, false);*/
+  appFont = loadFont ("SynchroLET-48.vlw");
   oscP5 = new OscP5(this, myListeningPort);
- // frameRate(25);
+  oscP5.plug(this, "test", "server");
+  // frameRate(25);
 }
 
 void draw() {
-  background(0);
-  
   if (video.available()) {
     video.read();
 
-    image(video, 0, 0, 320, 240);
+    image(video, 0, 0, 512, 384);
   } 
+
+  textFont(appFont, 48);
+  text("LIVE GAME", 400, 700);
+  text("There are  "+myNetAddressList.list().size()+"  players ready.", 200, 750);
+}
+
+void beginGame() {
+  if (myNetAddressList.list().size() == 1) {
+    OscMessage myMessage = new OscMessage("server");
+    myMessage.add(1);
+   oscP5.send(myMessage);
+  }
 }
 
 void captureEvent(CaptureAxisCamera video) {
   video.read();
- // newFrame=true;
 }
+/*
+void captureEvent(CaptureAxisCamera2 video2) {
+ video.read();
+ }
+ void captureEvent(CaptureAxisCamera3 video3) {
+ video.read();
+ }
+ void captureEvent(CaptureAxisCamera4 video4) {
+ video.read();
+ }
+ 
+ */
 
-
+// =================  OSC Events  ===================
 void oscEvent(OscMessage theOscMessage) {
   /* check if the address pattern fits any of our patterns */
   if (theOscMessage.addrPattern().equals(myConnectPattern)) {

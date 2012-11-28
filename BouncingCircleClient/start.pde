@@ -1,12 +1,7 @@
 class Start{
-  
-  
-  
   void drawStart(){
    background(startImage);
-  
    textFont(gFont, 48);
- //  text("Click and Hold It", 200,200);
    button.display();
     fill(0);  
 //   text("Start Game", 275, 300);

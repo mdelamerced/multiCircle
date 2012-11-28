@@ -28,13 +28,11 @@ class Button {
   }
 
   boolean press() {
-//    OscMessage m;
+
     if (over == true) {
       pressed = true;
       return true;
 
-  /*    m = new OscMessage("/server/connect", new Object[0]);
-      oscP5.flush(m, myBroadcastLocation);*/
     }
 
     else {

@@ -32,7 +32,7 @@ void setup() {
   Start = new Start();
   GameOver = new GameOver();
   GameApp = new GameApp();
-  button = new Button(width/2, 500, 50, color(0), color(0), color(0));
+  button = new Button(width/2, 700, 50, color(0), color(0), color(0));
   gFont = loadFont ("SynchroLET-48.vlw");
   /* create a new instance of oscP5. 
    * 12000 is the port number you are listening for incoming osc messages.
@@ -64,28 +64,36 @@ void draw() {
 void startPage() {
   Start.drawStart();
 
- // if (myNetAddressList.list().size() == 1 && button.press()) {
-   // GameApp.gameStart();
- // }
+  // if (myNetAddressList.list().size() == 1 && button.press()) {
+  // GameApp.gameStart();
+  // }
 }
 
 void mousePressed() {
-  println("nope");
-  /* create a new OscMessage with an address pattern, in this case /test. */
-  OscMessage myOscMessage = new OscMessage("/test");
-  /* add a value (an integer) to the OscMessage */
-  myOscMessage.add(100);
-  /* send the OscMessage to a remote location specified in myNetAddress */
-  oscP5.send(myOscMessage, myBroadcastLocation);
+  OscMessage m;
+  if (mouseX > 512 && mouseX < 562 && mouseY > 700 && mouseY< 750) {
+    m = new OscMessage("/server/connect", new Object[0]);
+    oscP5.flush(m, myBroadcastLocation);
+  }
 }
+
+/*
+  // create a new OscMessage with an address pattern, in this case /test. 
+ OscMessage myOscMessage = new OscMessage("/test");
+ // add a value (an integer) to the OscMessage 
+ myOscMessage.add(100);
+ //send the OscMessage to a remote location specified in myNetAddress 
+ oscP5.send(myOscMessage, myBroadcastLocation);
+ */
+
 
 void mouseDragged() {
   if ( mouseX < xpos+200 && mouseX > xpos-200 && mouseY > ypos-200 && mouseY < ypos+200) {
-    println("yei");
+    //debug   println("yei");
   }
   else
     if ( mouseX > xpos+200 || mouseX < xpos-200 || mouseY < ypos-200 || mouseY > ypos+200) {
-      println ("nay");
+      // debug    println ("nay");
       phase++;
       m = new OscMessage("/server/disconnect", new Object[0]);
       oscP5.flush(m, myBroadcastLocation);
@@ -93,7 +101,7 @@ void mouseDragged() {
 }
 
 void mouseReleased() {
-  println("nope");
+  // debug println("nope");
   phase++;
   m = new OscMessage("/server/disconnect", new Object[0]);
   oscP5.flush(m, myBroadcastLocation); 
