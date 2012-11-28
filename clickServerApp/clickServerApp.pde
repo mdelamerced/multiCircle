@@ -1,5 +1,8 @@
 import oscP5.*;
 import netP5.*;
+PImage logo;
+
+int players = 0;
 
 PFont appFont;
 
@@ -37,12 +40,15 @@ int myBroadcastPort = 12000;
 
 String myConnectPattern = "/server/connect";
 String myDisconnectPattern = "/server/disconnect";
+String readyMessage = "/client/ready";
+String startMessage = "/client/start";
 
 
 void setup() {
   background(0);
   size(1024, 768);
   noStroke();
+  logo = loadImage("clickholdit.png");
   video = new CaptureAxisCamera(this, "128.122.151.28", 640, 480, false);
   /*video2 = new CaptureAxisCamera2(this, "128.122.151.28", 640, 480, false);
    video3 = new CaptureAxisCamera3(this, "128.122.151.28", 640, 480, false);
@@ -59,17 +65,21 @@ void draw() {
 
     image(video, 0, 0, 512, 384);
   } 
-
+  fill(0);
+  rect (0, 380, 1024, 768);
+  fill(255);
   textFont(appFont, 48);
   text("LIVE GAME", 400, 700);
   text("There are  "+myNetAddressList.list().size()+"  players ready.", 200, 750);
+  image(logo,width/3, 200);
+  
 }
 
 void beginGame() {
-  if (myNetAddressList.list().size() == 1) {
+  if (myNetAddressList.list().size() == 4) {
     OscMessage myMessage = new OscMessage("server");
     myMessage.add(1);
-   oscP5.send(myMessage);
+    oscP5.send(myMessage);
   }
 }
 
