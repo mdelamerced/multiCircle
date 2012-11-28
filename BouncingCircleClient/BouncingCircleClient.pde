@@ -22,14 +22,6 @@ OscMessage m;
 
 /* a NetAddress contains the ip address and port number of a remote location in the network. */
 NetAddress myBroadcastLocation; 
-NetAddressList myNetAddressList = new NetAddressList();
-/* listeningPort is the port the server is listening for incoming messages */
-int myListeningPort = 32000;
-/* the broadcast port is the port the clients should listen for incoming messages from the server*/
-int myBroadcastPort = 12000;
-
-String myConnectPattern = "/server/connect";
-String myDisconnectPattern = "/server/disconnect";
 
 void setup() {
   size(1024, 768);
@@ -72,16 +64,13 @@ void draw() {
 void startPage() {
   Start.drawStart();
 
-  if (myNetAddressList.list().size() == 1 && button.press()) {
-    GameApp.gameStart();
-  }
+ // if (myNetAddressList.list().size() == 1 && button.press()) {
+   // GameApp.gameStart();
+ // }
 }
-
 
 void mousePressed() {
   println("nope");
-  // phase++;
-
   /* create a new OscMessage with an address pattern, in this case /test. */
   OscMessage myOscMessage = new OscMessage("/test");
   /* add a value (an integer) to the OscMessage */
@@ -89,7 +78,6 @@ void mousePressed() {
   /* send the OscMessage to a remote location specified in myNetAddress */
   oscP5.send(myOscMessage, myBroadcastLocation);
 }
-
 
 void mouseDragged() {
   if ( mouseX < xpos+200 && mouseX > xpos-200 && mouseY > ypos-200 && mouseY < ypos+200) {
@@ -103,7 +91,6 @@ void mouseDragged() {
       oscP5.flush(m, myBroadcastLocation);
     }
 }
-
 
 void mouseReleased() {
   println("nope");

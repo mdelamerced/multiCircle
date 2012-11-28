@@ -37,15 +37,16 @@ String myDisconnectPattern = "/server/disconnect";
 
 
 void setup() {
+  background(0);
   size(1024, 768);
   noStroke();
-  video = new CaptureAxisCamera(this, "128.122.151.28", 640, 480, false);
+  video = new CaptureAxisCamera(this, "128.122.151.28", 320, 240, false);
   /*video2 = new CaptureAxisCamera2(this, "128.122.151.28", 640, 480, false);
   video3 = new CaptureAxisCamera3(this, "128.122.151.28", 640, 480, false);
   video4 = new CaptureAxisCamera4(this, "128.122.151.28", 640, 480, false);*/
   
   oscP5 = new OscP5(this, myListeningPort);
-  frameRate(25);
+ // frameRate(25);
 }
 
 void draw() {
@@ -54,13 +55,13 @@ void draw() {
   if (video.available()) {
     video.read();
 
-    image(video, 0, 0, 640, 480);
+    image(video, 0, 0, 320, 240);
   } 
 }
 
 void captureEvent(CaptureAxisCamera video) {
   video.read();
-  newFrame=true;
+ // newFrame=true;
 }
 
 
