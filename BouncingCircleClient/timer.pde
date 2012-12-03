@@ -27,7 +27,7 @@ class Timer {
 
     fill(0, 0, 0);
     text(nf(minutes, 2, 0)+":"+nf(seconds, 2, 0)+":"+nf(hundredths, 2, 0), 50, 100);
-    text("key b for begin, s for stop, c for continue", 50, 140);
+   // text("key b for begin, s for stop, c for continue", 50, 140);
   }
 
   void keyPressed() { // pause

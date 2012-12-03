@@ -3,6 +3,7 @@ import netP5.*;
 
 PImage startImage;
 PImage overImage;
+PImage logoImage;
 
 //Axis Camera Code 
 import java.awt.Dimension; 
@@ -49,6 +50,7 @@ void setup() {
   video = new CaptureAxisCamera(this, "128.122.151.28", 640, 480, false);
   startImage = loadImage("startgame.png");
   overImage = loadImage("gameover.png");
+  logoImage = loadImage("clickholdit.png");
   Ellipse1 = new EllipseIcon();
   Start = new Start();
   GameOver = new GameOver();

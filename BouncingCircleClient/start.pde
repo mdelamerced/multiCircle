@@ -2,7 +2,7 @@ class Start{
   void drawStart(){
    background(startImage);
    textFont(gFont, 48);
-   button.display();
+ //  button.display();
     fill(0);  
 //   text("Start Game", 275, 300);
 //   textFont(gFont, 20);

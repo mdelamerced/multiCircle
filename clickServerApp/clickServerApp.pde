@@ -34,9 +34,9 @@ OscP5 oscP5;
 
 NetAddressList myNetAddressList = new NetAddressList();
 /* listeningPort is the port the server is listening for incoming messages */
-int myListeningPort = 1234;
+int myListeningPort = 32000;
 /* the broadcast port is the port the clients should listen for incoming messages from the server*/
-int myBroadcastPort = 12345;
+int myBroadcastPort = 12000;
 
 String myConnectPattern = "/server/connect";
 String myDisconnectPattern = "/server/disconnect";
