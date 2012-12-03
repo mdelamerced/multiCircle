@@ -24,8 +24,8 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;
 
 CaptureAxisCamera video;
-/*CaptureAxisCamera2 video2;
- CaptureAxisCamera3 video3;
+CaptureAxisCamera2 video2;
+ /*CaptureAxisCamera3 video3;
  CaptureAxisCamera4 video4;*/
 
 boolean newFrame=false;
@@ -34,9 +34,9 @@ OscP5 oscP5;
 
 NetAddressList myNetAddressList = new NetAddressList();
 /* listeningPort is the port the server is listening for incoming messages */
-int myListeningPort = 32000;
+int myListeningPort = 1234;
 /* the broadcast port is the port the clients should listen for incoming messages from the server*/
-int myBroadcastPort = 12000;
+int myBroadcastPort = 12345;
 
 String myConnectPattern = "/server/connect";
 String myDisconnectPattern = "/server/disconnect";
@@ -50,8 +50,8 @@ void setup() {
   noStroke();
   logo = loadImage("clickholdit.png");
   video = new CaptureAxisCamera(this, "128.122.151.28", 640, 480, false);
-  /*video2 = new CaptureAxisCamera2(this, "128.122.151.28", 640, 480, false);
-   video3 = new CaptureAxisCamera3(this, "128.122.151.28", 640, 480, false);
+  video2 = new CaptureAxisCamera2(this, "http://172.26.15.124:8080/1/stream.html", 640, 480, false);
+ /*  video3 = new CaptureAxisCamera3(this, "128.122.151.28", 640, 480, false);
    video4 = new CaptureAxisCamera4(this, "128.122.151.28", 640, 480, false);*/
   appFont = loadFont ("SynchroLET-48.vlw");
   oscP5 = new OscP5(this, myListeningPort);
@@ -64,6 +64,7 @@ void draw() {
     video.read();
 
     image(video, 0, 0, 512, 384);
+    image(video2, 512,0,512,384);
   } 
   fill(0);
   rect (0, 380, 1024, 768);

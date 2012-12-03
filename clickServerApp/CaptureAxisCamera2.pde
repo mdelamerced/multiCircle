@@ -1,176 +1,5 @@
-import oscP5.*;
-import netP5.*;
 
-PImage startImage;
-PImage overImage;
-
-//Axis Camera Code 
-import java.awt.Dimension; 
-import java.awt.Image; 
-import java.awt.image.BufferedImage; 
-import java.awt.image.PixelGrabber; 
-import java.io.BufferedInputStream; 
-import java.io.DataInputStream; 
-import java.io.IOException; 
-import java.io.InputStream; 
-import java.lang.reflect.Method; 
-import java.net.HttpURLConnection; 
-import java.net.URL;
-import processing.core.PApplet; 
-import processing.core.PImage;
-import com.sun.image.codec.jpeg.JPEGCodec; 
-import com.sun.image.codec.jpeg.JPEGImageDecoder;
-
-CaptureAxisCamera video;
-
-EllipseIcon Ellipse1;
-Start Start;
-GameOver GameOver;
-Button button;
-GameApp GameApp;
-Timer Timer;
-float xpos, ypos;
-
-PFont gFont;
-
-int timeout = 3; // to slow the mouse down a little
-int value =0;
-int phase = 1;
-
-OscP5 oscP5;
-OscMessage m;
-
-/* a NetAddress contains the ip address and port number of a remote location in the network. */
-NetAddress myBroadcastLocation; 
-
-void setup() {
-  size(1024, 768);
-  noStroke();
-  video = new CaptureAxisCamera(this, "128.122.151.28", 640, 480, false);
-  startImage = loadImage("startgame.png");
-  overImage = loadImage("gameover.png");
-  Ellipse1 = new EllipseIcon();
-  Start = new Start();
-  GameOver = new GameOver();
-  GameApp = new GameApp();
-  Timer = new Timer();
-  button = new Button(width/2, 700, 50, color(0), color(0), color(0));
-  gFont = loadFont ("SynchroLET-48.vlw");
-  /* create a new instance of oscP5. 
-   * 12000 is the port number you are listening for incoming osc messages.
-   */
-  oscP5 = new OscP5(this, 12000);
-
-  /* create a new NetAddress. a NetAddress is used when sending osc messages
-   * with the oscP5.send method.
-   */
-
-  /* the address of the osc broadcast server */
-  myBroadcastLocation = new NetAddress("127.0.0.1", 32000); //127.0.0.1 is a local instance, use real IP address for other computers
-}
-
-void draw() {
-  // startPage();
-
-  if (phase == 1) {
-    Start.drawStart();
-  }
-  else if (phase == 2 ) {
-    GameApp.gameStart();
-  }
-  else if (phase > 2) {
-    GameOver.drawOver();
-  }
-}
-
-void startPage() {
-  Start.drawStart();
-
-  // if (myNetAddressList.list().size() == 1 && button.press()) {
-  // GameApp.gameStart();
-  // }
-}
-
-void mousePressed() {
-  OscMessage m;
- // switch();
-  
-  if (mouseX > 512 && mouseX < 562 && mouseY > 700 && mouseY< 750) {
-    m = new OscMessage("/server/connect", new Object[0]);
-    oscP5.flush(m, myBroadcastLocation);
-   //break;
-    m = new OscMessage("/client/ready", new Object [0]);
-    oscP5.flush(m,myBroadcastLocation);
-    //break;
-  }
-}
-
-
-/*
-  // create a new OscMessage with an address pattern, in this case /test. 
- OscMessage myOscMessage = new OscMessage("/test");
- // add a value (an integer) to the OscMessage 
- myOscMessage.add(100);
- //send the OscMessage to a remote location specified in myNetAddress 
- oscP5.send(myOscMessage, myBroadcastLocation);
- */
-
-
-void mouseDragged() {
-  if ( mouseX < xpos+200 && mouseX > xpos-200 && mouseY > ypos-200 && mouseY < ypos+200) {
-    //debug   println("yei");
-  }
-  else
-    if ( mouseX > xpos+200 || mouseX < xpos-200 || mouseY < ypos-200 || mouseY > ypos+200) {
-      // debug    println ("nay");
-      phase++;
-      m = new OscMessage("/server/disconnect", new Object[0]);
-      oscP5.flush(m, myBroadcastLocation);
-    }
-}
-
-void mouseReleased() {
-  // debug println("nope");
-  phase++;
-  m = new OscMessage("/server/disconnect", new Object[0]);
-  oscP5.flush(m, myBroadcastLocation); 
-  GameOver.drawOver();
- // millis (30);
-  Start.drawStart();
-}
-
-//debug keys
-void keyPressed() {
- // OscMessage m;
-  switch(key) {
-    case('c'):
-    /* connect to the broadcaster */
-    m = new OscMessage("/server/connect", new Object[0]);
-    oscP5.flush(m, myBroadcastLocation);  
-    break;
-    case('d'):
-    /* disconnect from the broadcaster */
-    m = new OscMessage("/server/disconnect", new Object[0]);
-    oscP5.flush(m, myBroadcastLocation);  
-    break;
-    case('r'):
-    m = new OscMessage("/client/ready", new Object [0]);
-    oscP5.flush(m,myBroadcastLocation);
-    break;
-  }
-}
-
-void oscEvent(OscMessage theOscMessage) {
-  /* get and print the address pattern and the typetag of the received OscMessage */
-  println("### received an osc message with addrpattern "+theOscMessage.addrPattern()+" and typetag "+theOscMessage.typetag());
-  theOscMessage.print();
-}
-
-/*
----------Axis Camera Code  DO NOT MODIFY BELOW THIS LINE----------------
- */
-
-public class CaptureAxisCamera extends PImage implements Runnable {
+public class CaptureAxisCamera2 extends PImage implements Runnable {
   public boolean useMJPGStream = false;
 
   public String ip = "";
@@ -201,7 +30,7 @@ public class CaptureAxisCamera extends PImage implements Runnable {
   Method captureEventMethod;
 
   /** Creates a new instance of AxisCamera */
-  public CaptureAxisCamera(PApplet _parent, String _ip, int _w, int _h, boolean _useMJPGStream) {
+  public CaptureAxisCamera2(PApplet _parent, String _ip, int _w, int _h, boolean _useMJPGStream) {
     ip = _ip;
     parent = _parent;
     useMJPGStream = _useMJPGStream;
@@ -218,7 +47,7 @@ public class CaptureAxisCamera extends PImage implements Runnable {
 
     try {
       captureEventMethod = parent.getClass().getMethod("captureEvent", new Class[] { 
-        CaptureAxisCamera.class
+        CaptureAxisCamera2.class
       }
       );
     } 
