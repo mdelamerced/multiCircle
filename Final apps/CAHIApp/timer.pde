@@ -13,7 +13,7 @@ class Timer {
 
 
   void drawTimer() {
-
+  
     if (!stopped) {
       mill=(millis()-timerStart);
       if (continued) mill += offset;
@@ -30,7 +30,7 @@ class Timer {
   }
 
   void keyPressed() { // pause
-    if (key=='s') {
+   /* if (key=='s') {
       stopped = true;
     }
     if (key=='b') { // reset
@@ -45,6 +45,6 @@ class Timer {
 
       offset = mill;
     }
-  } 
+  } */
 }
-
+}
