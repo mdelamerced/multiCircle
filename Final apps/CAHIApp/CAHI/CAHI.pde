@@ -10,28 +10,48 @@ PImage logoImage;
 int phase = 1;
 int sync = 1;
 
+//Webcamera stream via UDP
+import processing.video.*;
+import javax.imageio.*;
+import java.awt.image.*; 
+
+// This is the port we are sending to
+int clientPort = 9100; 
+// This is our object that sends UDP out
+DatagramSocket ds; 
+// Capture object
+Capture cam;
+
+//Receiving video stream
+PImage video1;
+PImage video2;
+
+ReceiverThread thread1;
+ReceiverThread thread2;
+
+
 //Axis Camera Code
-import java.awt.Dimension; 
-import java.awt.Image; 
-import java.awt.image.BufferedImage; 
-import java.awt.image.PixelGrabber; 
-import java.io.BufferedInputStream; 
-import java.io.DataInputStream; 
-import java.io.IOException; 
-import java.io.InputStream; 
-import java.lang.reflect.Method; 
-import java.net.HttpURLConnection; 
-import java.net.URL;
-import processing.core.PApplet; 
-import processing.core.PImage;
-import com.sun.image.codec.jpeg.JPEGCodec; 
-import com.sun.image.codec.jpeg.JPEGImageDecoder;
-
-//cameras
-CaptureAxisCamera video;
-CaptureAxisCamera1 video1;
-CaptureAxisCamera2 video2;
-
+ import java.awt.Dimension; 
+ import java.awt.Image; 
+ import java.awt.image.BufferedImage; 
+ import java.awt.image.PixelGrabber; 
+ import java.io.BufferedInputStream; 
+ import java.io.DataInputStream; 
+ import java.io.IOException; 
+ import java.io.InputStream; 
+ import java.lang.reflect.Method; 
+ import java.net.HttpURLConnection; 
+ import java.net.URL;
+ import processing.core.PApplet; 
+ import processing.core.PImage;
+ import com.sun.image.codec.jpeg.JPEGCodec; 
+ import com.sun.image.codec.jpeg.JPEGImageDecoder;
+/* 
+ //cameras
+ CaptureAxisCamera video;
+ CaptureAxisCamera1 video1;
+ CaptureAxisCamera2 video2;
+ */
 EllipseIcon Ellipse1;
 Start Start;
 Wait Wait;
@@ -52,10 +72,20 @@ void setup() {
   size(1024, 768);
   noStroke();
 
-  //video
-  video = new CaptureAxisCamera(this, "128.122.151.28", 640, 480, false);
-  video1 = new CaptureAxisCamera1(this, "128.122.151.237", 640, 480, false);
-  video2 = new CaptureAxisCamera2(this, "128.122.151.82", 640, 480, false);
+  /*  //video
+   video = new CaptureAxisCamera(this, "128.122.151.28", 640, 480, false);
+   video1 = new CaptureAxisCamera1(this, "128.122.151.237", 640, 480, false);
+   video2 = new CaptureAxisCamera2(this, "128.122.151.82", 640, 480, false);*/
+
+  //  video thread to receive
+  video1 = createImage(320, 240, RGB);
+  video2 = createImage(320, 240, RGB);
+  thread1 = new ReceiverThread(video1.width, video1.height, 9100);
+  thread1.start();
+
+  thread2 = new ReceiverThread(video2.width, video2.height, 9101);
+  thread2.start();
+
   //load images
   startImage = loadImage("startgame.png");
   overImage = loadImage("gameover.png");
@@ -75,6 +105,16 @@ void setup() {
   //to sync computers
   oscP5 = new OscP5(this, 32000);
   myRemoteLocation = new NetAddress("198.1.100.1", 12000);
+  // Setting up the DatagramSocket, requires try/catch
+  try {
+    ds = new DatagramSocket();
+  } 
+  catch (SocketException e) {
+    e.printStackTrace();
+  }
+  // Initialize Camera
+  cam = new Capture( this, width, height, 30);
+  cam.start();
 }
 
 void draw() {
@@ -96,7 +136,56 @@ void draw() {
   default:
     phase = 1;
   }
+  if (thread1.available()) {
+    video1 = thread1.getImage();
+  }
+
+  if (thread2.available()) {
+    video2 = thread2.getImage();
+  }
 }
+
+void captureEvent( Capture c ) {
+  c.read();
+  // Whenever we get a new image, send it!
+  broadcast(c);
+}
+
+void broadcast(PImage img) {
+
+  // We need a buffered image to do the JPG encoding
+  BufferedImage bimg = new BufferedImage( img.width, img.height, BufferedImage.TYPE_INT_RGB );
+
+  // Transfer pixels from localFrame to the BufferedImage
+  img.loadPixels();
+  bimg.setRGB( 0, 0, img.width, img.height, img.pixels, 0, img.width);
+
+  // Need these output streams to get image as bytes for UDP communication
+  ByteArrayOutputStream baStream  = new ByteArrayOutputStream();
+  BufferedOutputStream bos    = new BufferedOutputStream(baStream);
+
+  // Turn the BufferedImage into a JPG and put it in the BufferedOutputStream
+  // Requires try/catch
+  try {
+    ImageIO.write(bimg, "jpg", bos);
+  } 
+  catch (IOException e) {
+    e.printStackTrace();
+  }
+
+  // Get the byte array, which we will send out via UDP!
+  byte[] packet = baStream.toByteArray();
+
+  // Send JPEG data as a datagram
+  println("Sending datagram with " + packet.length + " bytes");
+  try {
+    ds.send(new DatagramPacket(packet, packet.length, InetAddress.getByName("localhost"), clientPort));
+  } 
+  catch (Exception e) {
+    e.printStackTrace();
+  }
+}
+
 
 void mouseDragged() {
   if ( mouseX < xpos+200 && mouseX > xpos-200 && mouseY > ypos-200 && mouseY < ypos+200) {
